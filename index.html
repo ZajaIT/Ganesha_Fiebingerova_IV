@@ -1629,9 +1629,27 @@ max-width: none;
 ================================== */
 
 .reviews-section {
-  background: #E58E36;
+  position: relative;
+  isolation: isolate;
+  background: #F6A64D;
   padding: 65px 0 70px;
   overflow: hidden;
+}
+
+.reviews-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background-image: url("flowers.webp");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: scroll;
+
+  opacity: 0.15;
+  pointer-events: none;
 }
 
 .reviews-inner {
@@ -1646,7 +1664,7 @@ max-width: none;
   line-height: 1.1;
   color: #751b18;
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 40px;
 }
 
 .reviews-line {
@@ -3778,7 +3796,7 @@ uvolnění a péči. Pojďme se spolu podívat na to, co vaše pleť právě pot
 <section class="reviews-section" id="recenze">
   <div class="reviews-inner">
 
-    <h2>Co o mně říkají klienti</h2>
+   <h2>Slova mých klientů</h2>
 
     <div class="reviews-slider">
   <div class="reviews-track">
