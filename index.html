@@ -2057,6 +2057,19 @@ max-width: none;
   border-bottom-color: #E58E36;
 }
 
+    /* FORMULÁŘ – OPRAVA AUTOMATICKÉHO VYPLŇOVÁNÍ */
+
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover,
+.contact-form input:-webkit-autofill:focus,
+.contact-form textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #4D1416 inset !important;
+  -webkit-text-fill-color: #FFF8F1 !important;
+  caret-color: #FFF8F1;
+  border-bottom: 1px solid rgba(255, 248, 241, 0.45);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .contact-form button {
   align-self: flex-start;
   margin-top: 8px;
