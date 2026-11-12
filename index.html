@@ -919,6 +919,107 @@ max-width: none;
   }
 }
 
+    /* ==================================
+   EPILACE – ROZBALOVACÍ CENÍK
+================================== */
+
+.epilation-pricelist {
+  margin-top: 28px;
+  text-align: left;
+}
+
+.epilation-pricelist details {
+  border-top: 1px solid #edc9b4;
+}
+
+.epilation-pricelist details:last-child {
+  border-bottom: 1px solid #edc9b4;
+}
+
+.epilation-pricelist summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 5px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #751b18;
+  cursor: pointer;
+  list-style: none;
+}
+
+.epilation-pricelist summary::-webkit-details-marker {
+  display: none;
+}
+
+.epilation-pricelist summary::after {
+  content: "+";
+  font-size: 23px;
+  font-weight: 400;
+  color: #c66c42;
+  line-height: 1;
+}
+
+.epilation-pricelist details[open] summary::after {
+  content: "−";
+}
+
+.epilation-prices-content {
+  padding: 0 5px 18px;
+}
+
+.epilation-prices-content > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edc9b4;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b302d;
+}
+
+.epilation-prices-content > div span:last-child {
+  white-space: nowrap;
+  color: #751b18;
+  font-weight: 600;
+}
+
+.epilation-note {
+  margin-top: 17px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #3b302d;
+}
+
+/* EPILACE – MOBIL */
+
+@media (max-width: 600px) {
+
+  .epilation-pricelist {
+    margin-top: 24px;
+  }
+
+  .epilation-pricelist summary {
+    font-size: 14px;
+    padding: 15px 5px;
+  }
+
+  .epilation-prices-content > div {
+    font-size: 12px;
+    gap: 10px;
+  }
+
+  .epilation-note {
+    font-size: 11px;
+  }
+
+}
 
 /* ==================================
    NAJÍŽDĚCÍ ANIMACE WEBU
@@ -3009,9 +3110,47 @@ uvolnění a péči, která respektuje vaše potřeby
     <button type="button" class="service-modal-close" aria-label="Zavřít">&times;</button>
     <h2>Epilace těla - šetrné odstranění chloupků</h2>
     <div class="service-modal-line"></div>
-    <div class="service-modal-text">
+        <div class="service-modal-text">
       <p>Epilaci provádím pomocí teplého vosku určeného i pro citlivou pokožku. Vosk chloupky zachytí a odstraní i s kořínky, díky čemuž zůstává pokožka déle hladká a jemná než při běžném holení.</p>
       <p>Ošetření provádím podle vybrané partie a citlivosti pokožky. Vhodné je pro epilaci nohou, rukou, podpaží, zad, hrudníku i dalších oblastí těla.</p>
+    </div>
+
+    <div class="epilation-pricelist">
+
+      <details name="epilation-prices">
+        <summary>Dámská epilace</summary>
+
+        <div class="epilation-prices-content">
+          <div><span>Horní ret</span><span>100 Kč</span></div>
+          <div><span>Brada</span><span>100 Kč</span></div>
+          <div><span>Líce</span><span>150 Kč</span></div>
+          <div><span>Krk</span><span>150 Kč</span></div>
+          <div><span>Předloktí</span><span>300 Kč</span></div>
+          <div><span>Celé paže</span><span>500 Kč</span></div>
+          <div><span>Lýtka</span><span>500 Kč</span></div>
+          <div><span>Celé nohy</span><span>800 Kč</span></div>
+          <div><span>Třísla</span><span>300 Kč</span></div>
+
+          <p class="epilation-note">
+            Při zařazení epilace obličeje a krku do kosmetického
+            ošetření platí zvýhodněná cena se slevou 20 %.
+          </p>
+        </div>
+      </details>
+
+      <details name="epilation-prices">
+        <summary>Pánská epilace</summary>
+
+        <div class="epilation-prices-content">
+          <div><span>Ramena</span><span>300 Kč</span></div>
+          <div><span>Hrudník</span><span>500 Kč</span></div>
+          <div><span>Břicho</span><span>450 Kč</span></div>
+          <div><span>Hrudník + břicho</span><span>900 Kč</span></div>
+          <div><span>Záda – horní část</span><span>450 Kč</span></div>
+          <div><span>Celá záda</span><span>900 Kč</span></div>
+        </div>
+      </details>
+
     </div>
     <a href="#kontakt" class="service-modal-order">Objednat se</a>
   </div>
