@@ -4366,6 +4366,7 @@ contactForm.addEventListener("submit", async function(event) {
 
   </script>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const track = document.querySelector(".reviews-track");
@@ -4373,142 +4374,208 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!track || !slider) return;
 
   const cards = Array.from(track.children);
-  if (!cards.length) return;
+  const count = cards.length;
+  if (!count) return;
 
-  // Kopie kartiček pro nekonečný pohyb
-  cards.forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.setAttribute("aria-hidden", "true");
-    track.appendChild(clone);
-  });
+  // Tři sady recenzí pro nekonečný pohyb oběma směry
+  for (let set = 0; set < 2; set++) {
+    cards.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    });
+  }
 
-  const mobileQuery = window.matchMedia("(max-width: 600px)");
+  const mobile = window.matchMedia("(max-width: 600px)");
   const speed = 28;
 
   let position = 0;
   let paused = false;
+  let touching = false;
   let lastTime = null;
-  let currentIndex = 0;
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchEndX = 0;
-  let touchEndY = 0;
+  let pauseUntil = 0;
+  let swipeAnimation = null;
+  let startX = 0;
+  let startY = 0;
 
-  function getLoopWidth() {
-    return track.children[cards.length].offsetLeft -
+  function loopWidth() {
+    return track.children[count].offsetLeft -
            track.children[0].offsetLeft;
   }
 
-  function getCardPosition(index) {
-    const card = track.children[index];
-    return card.offsetLeft - track.children[0].offsetLeft
-      - (slider.clientWidth - card.offsetWidth) / 2;
+  function centerOffset() {
+    const style = getComputedStyle(slider);
+    const left = parseFloat(style.paddingLeft) || 0;
+    const right = parseFloat(style.paddingRight) || 0;
+    const available = slider.clientWidth - left - right;
+
+    return (available - track.children[0].offsetWidth) / 2;
   }
 
-  function showCard(index, animate = true) {
-    currentIndex = (index + cards.length) % cards.length;
-
-    // Poslední -> první: využijeme kopii první kartičky
-    const targetIndex = index === cards.length
-      ? cards.length
-      : currentIndex;
-
-    const target = getCardPosition(targetIndex);
-
-    track.style.transition = animate
-      ? "transform 0.45s ease"
-      : "none";
-
-    track.style.transform = `translate3d(${-target}px, 0, 0)`;
-
-    if (index === cards.length) {
-      track.addEventListener("transitionend", function reset(e) {
-        if (e.propertyName !== "transform") return;
-
-        track.removeEventListener("transitionend", reset);
-        track.style.transition = "none";
-        track.style.transform =
-          `translate3d(${-getCardPosition(0)}px, 0, 0)`;
-      });
-    }
+  function cardPosition(index) {
+    return track.children[index].offsetLeft -
+           track.children[0].offsetLeft -
+           centerOffset();
   }
 
-  function setupMode() {
+  function normalize() {
+    const width = loopWidth();
+    if (width <= 0) return;
+
+    // Udržujeme pohyb v prostřední sadě recenzí
+    while (position < width) position += width;
+    while (position >= width * 2) position -= width;
+  }
+
+  function render() {
+    track.style.transform =
+      `translate3d(${-position}px, 0, 0)`;
+  }
+
+  function setup() {
+    swipeAnimation = null;
+    touching = false;
+    pauseUntil = 0;
     track.style.transition = "none";
 
-    if (mobileQuery.matches) {
-      currentIndex = 0;
-      showCard(0, false);
+    if (mobile.matches) {
+      position = cardPosition(count);
     } else {
       position = 0;
-      track.style.transform = "translate3d(0, 0, 0)";
     }
 
     lastTime = null;
+    render();
   }
 
-  slider.addEventListener("mouseenter", () => paused = true);
-  slider.addEventListener("mouseleave", () => paused = false);
+  slider.addEventListener("mouseenter", () => {
+    if (!mobile.matches) paused = true;
+  });
 
-  // Ovládání prstem pouze na mobilu
+  slider.addEventListener("mouseleave", () => {
+    paused = false;
+  });
+
+  // Dotykové ovládání na mobilu
   slider.addEventListener("touchstart", e => {
-    if (!mobileQuery.matches) return;
+    if (!mobile.matches) return;
 
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchEndX = touchStartX;
-    touchEndY = touchStartY;
+    touching = true;
+    swipeAnimation = null;
+
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
   }, { passive: true });
 
   slider.addEventListener("touchend", e => {
-    if (!mobileQuery.matches) return;
+    if (!mobile.matches) return;
 
-    touchEndX = e.changedTouches[0].clientX;
-    touchEndY = e.changedTouches[0].clientY;
+    touching = false;
 
-    const diffX = touchEndX - touchStartX;
-    const diffY = touchEndY - touchStartY;
+    const diffX = e.changedTouches[0].clientX - startX;
+    const diffY = e.changedTouches[0].clientY - startY;
 
-    // Svislé scrollování stránky zůstane zachováno
-    if (Math.abs(diffX) < 40 ||
-        Math.abs(diffX) <= Math.abs(diffY)) return;
-
-    if (diffX < 0) {
-      showCard(currentIndex + 1);
-    } else {
-      showCard(currentIndex - 1);
+    if (Math.abs(diffX) < 35 ||
+        Math.abs(diffX) <= Math.abs(diffY)) {
+      pauseUntil = performance.now() + 500;
+      return;
     }
+
+    normalize();
+
+    // Najdeme kartičku nejbližší středu obrazovky
+    let nearest = count;
+    let distance = Infinity;
+
+    for (let i = 0; i < track.children.length; i++) {
+      const difference = Math.abs(cardPosition(i) - position);
+
+      if (difference < distance) {
+        distance = difference;
+        nearest = i;
+      }
+    }
+
+    // Jeden swipe = přesně jedna recenze
+    const direction = diffX < 0 ? 1 : -1;
+    const targetIndex = Math.max(
+      0,
+      Math.min(track.children.length - 1, nearest + direction)
+    );
+
+    swipeAnimation = {
+      from: position,
+      to: cardPosition(targetIndex),
+      start: performance.now(),
+      duration: 450
+    };
   }, { passive: true });
 
-  // Plynulý automatický pohyb na PC a tabletu
+  slider.addEventListener("touchcancel", () => {
+    touching = false;
+  }, { passive: true });
+
   function animate(time) {
     if (lastTime === null) lastTime = time;
 
     const delta = Math.min((time - lastTime) / 1000, 0.05);
     lastTime = time;
 
-    if (!mobileQuery.matches && !paused) {
-      position += speed * delta;
+    if (mobile.matches && swipeAnimation) {
+      const a = swipeAnimation;
+      const progress = Math.min(
+        (time - a.start) / a.duration, 1
+      );
 
-      const loopWidth = getLoopWidth();
+      const eased = 1 - Math.pow(1 - progress, 3);
 
-      if (loopWidth > 0 && position >= loopWidth) {
-        position %= loopWidth;
+      position = a.from + (a.to - a.from) * eased;
+
+      if (progress >= 1) {
+        position = a.to;
+        normalize();
+        swipeAnimation = null;
+
+        // Krátká pauza na přečtení po swipu
+        pauseUntil = time + 1500;
       }
 
-      track.style.transform =
-        `translate3d(${-position}px, 0, 0)`;
+      render();
+
+    } else if (
+      !paused &&
+      !touching &&
+      time >= pauseUntil
+    ) {
+      position += speed * delta;
+
+      const width = loopWidth();
+
+      if (mobile.matches) {
+        normalize();
+      } else if (width > 0 && position >= width) {
+        position %= width;
+      }
+
+      render();
     }
 
     requestAnimationFrame(animate);
   }
 
-  mobileQuery.addEventListener("change", setupMode);
+  mobile.addEventListener("change", setup);
+  window.addEventListener("resize", () => {
+    if (mobile.matches) {
+      normalize();
+      render();
+    }
+  });
 
-  setupMode();
+  setup();
   requestAnimationFrame(animate);
 });
 </script>
+
 
   
 </body>
