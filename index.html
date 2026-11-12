@@ -2100,6 +2100,19 @@ max-width: none;
   line-height: 1.5;
   color: #ffffff;
 }
+    .form-gdpr {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #FFF8F1;
+  margin: 0;
+}
+
+.form-gdpr a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 
     /* HERO – ZAROVNÁNÍ OBSAHU POD JMÉNEM – PC */
@@ -4042,7 +4055,12 @@ uvolnění a péči. Pojďme se spolu podívat na to, co vaše pleť právě pot
           placeholder="Vaše zpráva"
           required></textarea>
 
-       <button type="submit">
+<p class="form-gdpr">
+  Odesláním souhlasíte se
+  <a href="gdpr.html" target="_blank" rel="noopener noreferrer">zpracováním osobních údajů</a>.
+</p>
+
+<button type="submit">
   Odeslat zprávu
 </button>
 
