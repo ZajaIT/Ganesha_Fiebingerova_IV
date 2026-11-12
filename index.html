@@ -4365,56 +4365,151 @@ contactForm.addEventListener("submit", async function(event) {
 });
 
   </script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const track = document.querySelector(".reviews-track");
-  if (!track) return;
+  const slider = document.querySelector(".reviews-slider");
+  if (!track || !slider) return;
 
   const cards = Array.from(track.children);
+  if (!cards.length) return;
 
-  // Zdvojení kartiček pro nekonečný pohyb
+  // Kopie kartiček pro nekonečný pohyb
   cards.forEach(card => {
     const clone = card.cloneNode(true);
     clone.setAttribute("aria-hidden", "true");
     track.appendChild(clone);
   });
 
+  const mobileQuery = window.matchMedia("(max-width: 600px)");
+  const speed = 28;
+
   let position = 0;
   let paused = false;
   let lastTime = null;
+  let currentIndex = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
 
-  const speed = 28; // rychlost v pixelech za sekundu
+  function getLoopWidth() {
+    return track.children[cards.length].offsetLeft -
+           track.children[0].offsetLeft;
+  }
 
-  const slider = document.querySelector(".reviews-slider");
+  function getCardPosition(index) {
+    const card = track.children[index];
+    return card.offsetLeft - track.children[0].offsetLeft
+      - (slider.clientWidth - card.offsetWidth) / 2;
+  }
+
+  function showCard(index, animate = true) {
+    currentIndex = (index + cards.length) % cards.length;
+
+    // Poslední -> první: využijeme kopii první kartičky
+    const targetIndex = index === cards.length
+      ? cards.length
+      : currentIndex;
+
+    const target = getCardPosition(targetIndex);
+
+    track.style.transition = animate
+      ? "transform 0.45s ease"
+      : "none";
+
+    track.style.transform = `translate3d(${-target}px, 0, 0)`;
+
+    if (index === cards.length) {
+      track.addEventListener("transitionend", function reset(e) {
+        if (e.propertyName !== "transform") return;
+
+        track.removeEventListener("transitionend", reset);
+        track.style.transition = "none";
+        track.style.transform =
+          `translate3d(${-getCardPosition(0)}px, 0, 0)`;
+      });
+    }
+  }
+
+  function setupMode() {
+    track.style.transition = "none";
+
+    if (mobileQuery.matches) {
+      currentIndex = 0;
+      showCard(0, false);
+    } else {
+      position = 0;
+      track.style.transform = "translate3d(0, 0, 0)";
+    }
+
+    lastTime = null;
+  }
 
   slider.addEventListener("mouseenter", () => paused = true);
   slider.addEventListener("mouseleave", () => paused = false);
 
+  // Ovládání prstem pouze na mobilu
+  slider.addEventListener("touchstart", e => {
+    if (!mobileQuery.matches) return;
+
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchEndX = touchStartX;
+    touchEndY = touchStartY;
+  }, { passive: true });
+
+  slider.addEventListener("touchend", e => {
+    if (!mobileQuery.matches) return;
+
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+
+    // Svislé scrollování stránky zůstane zachováno
+    if (Math.abs(diffX) < 40 ||
+        Math.abs(diffX) <= Math.abs(diffY)) return;
+
+    if (diffX < 0) {
+      showCard(currentIndex + 1);
+    } else {
+      showCard(currentIndex - 1);
+    }
+  }, { passive: true });
+
+  // Plynulý automatický pohyb na PC a tabletu
   function animate(time) {
     if (lastTime === null) lastTime = time;
 
     const delta = Math.min((time - lastTime) / 1000, 0.05);
     lastTime = time;
 
-    if (!paused) {
+    if (!mobileQuery.matches && !paused) {
       position += speed * delta;
 
-      const firstClone = track.children[cards.length];
-      const loopWidth = firstClone.offsetLeft - track.children[0].offsetLeft;
+      const loopWidth = getLoopWidth();
 
       if (loopWidth > 0 && position >= loopWidth) {
         position %= loopWidth;
       }
 
-      track.style.transform = `translate3d(${-position}px, 0, 0)`;
+      track.style.transform =
+        `translate3d(${-position}px, 0, 0)`;
     }
 
     requestAnimationFrame(animate);
   }
 
+  mobileQuery.addEventListener("change", setupMode);
+
+  setupMode();
   requestAnimationFrame(animate);
 });
 </script>
+
   
 </body>
 </html>
