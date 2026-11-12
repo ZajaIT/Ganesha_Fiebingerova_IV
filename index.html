@@ -1655,6 +1655,59 @@ max-width: none;
   background: #fff8f1;
   margin: 0 auto 40px;
 }
+    /* ==================================
+   RECENZE – KARTIČKY
+================================== */
+
+.reviews-slider {
+  width: 100%;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+.reviews-track {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  will-change: transform;
+}
+
+.review-card {
+  flex: 0 0 380px;
+  background: #fff8f1;
+  border-radius: 14px;
+  padding: 28px 30px 25px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.review-quote {
+  font-family: Georgia, serif;
+  font-size: 36px;
+  line-height: 1;
+  color: #e58e36;
+  margin-bottom: 15px;
+}
+
+.review-card p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #443a35;
+  margin: 0 0 25px;
+}
+
+.review-author {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e8b79b;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #751b18;
+}
 
 /* ==================================
    KONTAKT – PC
@@ -3729,7 +3782,61 @@ uvolnění a péči. Pojďme se spolu podívat na to, co vaše pleť právě pot
 
     <div class="reviews-line"></div>
 
-    <!-- Sem vložíme karusel s recenzemi -->
+    <div class="reviews-slider">
+  <div class="reviews-track">
+
+    <!-- RECENZE 1 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>Paní Mirečka je prostě jedinečná. Její osobní přístup plný profesionality je pro mě nezaměnitelný. Vždy odcházím s pocitem, jak jsem krásná a že jsem si zase úžasně odpočinula. Mám možnost porovnávat, a proto paní Mirečku vřele doporučuji 🥰</p>
+      <div class="review-author">Hana S.</div>
+    </article>
+
+    <!-- RECENZE 2 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>V kosmetice Ganesha nejde jen o krásu těla, ale i duše. Relaxace pod jemnými doteky prstů, esoterická hudba a duchovní atmosféra je naprosto jedinečná. Josef</p>
+      <div class="review-author">Josef S.</div>
+    </article>
+
+    <!-- RECENZE 3 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>Míry,1. profesionální přístup 2.vynikající ošetření pleti a konzultace problému 3.krásné prostředí plné pohody a klidu 4.celkové poděkování M.</p>
+      <div class="review-author">Marie Š.</div>
+    </article>
+
+    <!-- RECENZE 4 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>Ahoj zlatíčko🥰, ne jen letité přátelství , ale i tvůj zodpovědný přístup k práci. Pořád se vzděláváš a snažíš se lidem dávat to co potřebují ve všech směrech. A za to ti děkuji🫶. A</p>
+      <div class="review-author">Markéta F.</div>
+    </article>
+
+    <!-- RECENZE 5 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>Dobrý večer posílám Vám tu recenzi a nevím jestli jste to takhle chtěla:<br>
+      K paní kosmetičce chodím již téměř pět let, s jejím přístupem ke mně jsem velmi spokojena a to jak po stránce profesní tak i lidské. Upřednostňuji českou přírodní kosmetiku a s tou ona pracuje. Vždy mě seznámí s tím co mi bude dělat, co to s mou pletí udělá a jaký přípravek použije. Často si u ní její kosmetiku kupuji a vždy dostanu radu jak ji a kdy ji mám použít. Prostředí jejího salonu je hezky uspořádané a čisté vždy se zde cítím jako v pohádce a odpočinu si. Paní je příjemná veselá a empatická.</p>
+      <div class="review-author">paní Valentová</div>
+    </article>
+
+    <!-- RECENZE 6 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>K paní Mirce chodím druhým rokem,s její prací jsem nadmíru spokojená.Kosmetický salón je čistý, útulný, vždy v něm panuje příjemná, relaxační atmosféra.Paní Mirka je profesionálka, doporučila mi péči přímo na míru.Samotné ošetření, masáž jsou vždy příjemné.Všem vřele doporučuji, Pospíchalová Irena</p>
+      <div class="review-author">Irena P.</div>
+    </article>
+
+    <!-- RECENZE 7 -->
+    <article class="review-card">
+      <span class="review-quote">❞</span>
+      <p>Paní MF ma ve svem oboru dlouholete zkusenosti. Poskytuje profesionalni sluzby v peci o plet s hlubokou znalosti jeji diagnostiky a nabidkou idealni kombinace produktu pro kazdodenni peci. Pracuje s produkty ceskych firem, zalezi ji na tom, aby podporila ceske vyrobce. Je vstricna a ochotna, zajima se o celostni pristup k cloveku, ma znalosti a prakticke zkusenosti s homeopatii, dokaze poradit i v ruznych oblastech zdravi a vyzivy. Ve svem oboru se stale vzdelava a rozsiruje portfolio svych dovednosti. Moc rada se necham pravidelne opecovat a uzit si cas relaxace v cistem utulnem prostoru jejiho salonu s prijemnou lecivou hudbou. Srdecne doporucuji vsem zenam, ktere si chteji odpocinout a nechat se zkraslit v bezpecnem a utulnem prostredi.</p>
+      <div class="review-author">Jindra H.</div>
+    </article>
+
+  </div>
+</div>
 
   </div>
 </section>
@@ -4206,6 +4313,56 @@ contactForm.addEventListener("submit", async function(event) {
 });
 
   </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const track = document.querySelector(".reviews-track");
+  if (!track) return;
 
+  const cards = Array.from(track.children);
+
+  // Zdvojení kartiček pro nekonečný pohyb
+  cards.forEach(card => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute("aria-hidden", "true");
+    track.appendChild(clone);
+  });
+
+  let position = 0;
+  let paused = false;
+  let lastTime = null;
+
+  const speed = 28; // rychlost v pixelech za sekundu
+
+  const slider = document.querySelector(".reviews-slider");
+
+  slider.addEventListener("mouseenter", () => paused = true);
+  slider.addEventListener("mouseleave", () => paused = false);
+
+  function animate(time) {
+    if (lastTime === null) lastTime = time;
+
+    const delta = Math.min((time - lastTime) / 1000, 0.05);
+    lastTime = time;
+
+    if (!paused) {
+      position += speed * delta;
+
+      const firstClone = track.children[cards.length];
+      const loopWidth = firstClone.offsetLeft - track.children[0].offsetLeft;
+
+      if (loopWidth > 0 && position >= loopWidth) {
+        position %= loopWidth;
+      }
+
+      track.style.transform = `translate3d(${-position}px, 0, 0)`;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+});
+</script>
+  
 </body>
 </html>
